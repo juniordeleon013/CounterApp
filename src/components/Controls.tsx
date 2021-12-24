@@ -1,23 +1,22 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity, Text, TouchableNativeFeedbackBase, TouchableNativeFeedback, Platform } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text, TouchableNativeFeedback, Platform } from 'react-native';
 
 interface IControl {
-    ControlHandler: () => {} //or function,
-    ButtonColor: Object,
-    ControlLocation: Object,
+    ControlHandler: Function,// or () => {},
     Title: String,
+    Position?: 'br' | 'bl',
 }
 
-export const Controls = ({ControlHandler, ButtonColor, Title, ControlLocation}: IControl) => {
+export const Controls = ({Position = 'br', ControlHandler, Title, ControlLocation}: IControl) => {
 
     const iOS = () =>{
         return (
             <TouchableOpacity
             activeOpacity={0.75}
             onPress={() => ControlHandler()}
-            style={ControlLocation}
+            style={Position === 'br' ? styles.ButtonWrapperPlus : styles.ButtonWrapperLess}
             >
-                <View style={[styles.ControlWrapper, ButtonColor]}>
+                <View style={[styles.ControlWrapper, (Position === 'br') ? styles.ButtonPlus : styles.ButtonLess]}>
                     <Text style={styles.buttonText}>{Title}</Text>
                 </View>
             </TouchableOpacity>
@@ -28,13 +27,13 @@ export const Controls = ({ControlHandler, ButtonColor, Title, ControlLocation}: 
         return (
             <TouchableOpacity
             onPress={() => ControlHandler()}
-            style={ControlLocation}
+            style={Position === 'br' ? styles.ButtonWrapperPlus : styles.ButtonWrapperLess}
             >
                 <TouchableNativeFeedback
                 onPress={() => ControlHandler()}
                 background={ TouchableNativeFeedback.Ripple("#28425B", false)}
                 >
-                    <View style={[styles.ControlWrapper, ButtonColor]}>
+                    <View style={[styles.ControlWrapper, (Position === 'br') ? styles.ButtonWrapperPlus : styles.ButtonWrapperLess]}>
                         <Text style={styles.buttonText}>{Title}</Text>
                     </View>
                 </TouchableNativeFeedback>
@@ -60,4 +59,20 @@ const styles = StyleSheet.create({
         borderRadius: 100,
         justifyContent: "center",
     },
+    ButtonLess: {
+        backgroundColor: "#eb144c",
+    },
+    ButtonPlus: {
+        backgroundColor: "#03a9f4",
+    },
+    ButtonWrapperLess: {
+        position: 'absolute',
+        bottom: 0,
+        left: 5,
+    },
+    ButtonWrapperPlus: {
+        position: 'absolute',
+        bottom: 0,
+        right: 5,
+    }
 });
